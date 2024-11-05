@@ -9,7 +9,7 @@ export default function SignIn() {
         await signIn("cognito")
       }}
     >
-      <button type="submit">Signin with Cognito</button>
+      <button type="submit">Signin Cognito</button>
     </form>
   )
 } 
