@@ -1,4 +1,6 @@
 import Image from "next/image";
+import SignIn from "./components/sign-in";
+import UserAvatar from "./components/UserAvatar";
 
 export default function Home() {
   return (
@@ -14,6 +16,9 @@ export default function Home() {
         />
 
         <h1>AWS-CHAT</h1>
+        <SignIn />
+
+        <UserAvatar />
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
