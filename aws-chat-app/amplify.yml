@@ -1,21 +1,21 @@
 version: 1
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - npm ci
-    build:
-      commands:
-        - env | grep -e AUTH_COGNITO_ID -e AUTH_COGNITO_SECRET -e AUTH_COGNITO_ISSUER -e AUTH_SECRET  >> aws-chat-app/.env.production
-        - env | grep -e NEXT_PUBLIC_ >> aws-chat-app/.env.production
-        - npm run build
-  artifacts:
-    baseDirectory: aws-chat-app/.next
-    files:
-      - '**/*'
-  cache:
-    paths:
-      - node_modules/**/*
-      - .next/cache/**/*
-  buildPath: /
-appRoot: aws-chat-app
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+        build:
+          commands:
+            - env | grep -e AUTH_COGNITO_ID -e AUTH_COGNITO_SECRET -e AUTH_COGNITO_ISSUER -e AUTH_SECRET  >> aws-chat-app/.env.production
+            - env | grep -e NEXT_PUBLIC_ >> aws-chat-app/.env.production
+            - npm run build
+      artifacts:
+        baseDirectory: aws-chat-app/.next
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
+      buildPath: /
+    appRoot: aws-chat-app
