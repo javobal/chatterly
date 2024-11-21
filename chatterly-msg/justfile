@@ -1,0 +1,10 @@
+
+sam-test:
+    sam local start-api --hook-name terraform
+
+publish-layer:
+    aws lambda publish-layer-version --layer-name node-chatterly-layer \
+    --zip-file fileb://layer_content.zip \
+    --compatible-runtimes nodejs20.x \
+    --compatible-architectures "x86_64" \
+    --profile javobal 

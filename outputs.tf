@@ -9,3 +9,8 @@ output "base_url" {
 
   value = aws_apigatewayv2_stage.gw_dev_stage.invoke_url
 }
+
+output "record_name" {
+  description = "Custom Route 53 Record"
+  value = aws_route53_record.chatterly_api.name
+}

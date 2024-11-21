@@ -1,3 +1,5 @@
+# Route 53 Zone -> API Gateway -> Lambda 
+
 terraform { 
   cloud { 
     
@@ -29,6 +31,8 @@ provider "aws" {
   }
 
 }
+
+##### Zip -> S3 Bucket
 
 data "archive_file" "lambda_archive" {
   type = "zip"
@@ -155,3 +159,49 @@ resource "aws_lambda_permission" "api_gw" {
 
   source_arn = "${aws_apigatewayv2_api.api_gw.execution_arn}/*/*"
 }
+
+#### Route 53 Domain Mapping
+
+resource "aws_apigatewayv2_domain_name" "chatterly_api" {
+  domain_name = "server.chatterly.javobal.com"
+
+  domain_name_configuration {
+    certificate_arn = data.aws_acm_certificate.chatterly.arn
+    endpoint_type   = "REGIONAL"
+    security_policy = "TLS_1_2"
+  }
+}
+
+resource "aws_apigatewayv2_api_mapping" "chatterly_api" {
+  api_id      = aws_apigatewayv2_api.api_gw.id
+  domain_name = aws_apigatewayv2_domain_name.chatterly_api.id
+  stage       = aws_apigatewayv2_stage.gw_dev_stage.id
+}
+
+# Find a certificate that is issued
+data "aws_acm_certificate" "chatterly" {
+  domain   = "chatterly.javobal.com"
+  statuses = ["ISSUED"]
+}
+
+data "aws_route53_zone" "chatterly" {
+  name         = "chatterly.javobal.com"
+}
+
+# Alias Record
+resource "aws_route53_record" "chatterly_api" {
+  zone_id = data.aws_route53_zone.chatterly.zone_id
+  name    = "server.${data.aws_route53_zone.chatterly.name}"
+  type    = "A"
+
+  # aws_apigatewayv2_domain_name / target_domain_name == API Gateway Domain Name (Console)
+  # alias name = api_gateway_domain target_domain_name
+  alias {
+    name                   = aws_apigatewayv2_domain_name.chatterly_api.domain_name_configuration[0].target_domain_name
+    zone_id                = aws_apigatewayv2_domain_name.chatterly_api.domain_name_configuration[0].hosted_zone_id
+    evaluate_target_health = true
+  }
+}
+
+
+
