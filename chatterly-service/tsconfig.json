@@ -1,0 +1,18 @@
+{
+    "compilerOptions": { // https://github.com/tsconfig/bases/blob/main/bases/node20.json
+        "incremental": true,
+        "module": "Node16" /* Allows to load ESM modules from CommonJS files, because node 16 supports ESM/CJS modules. Otherwise TSC changes our dynamic import to a require */,
+        "moduleResolution": "Node16",
+        "lib": ["es2023"],
+        "target": "es2022",
+        "outDir": "dist",
+        "strict": true,
+        "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */,
+        "skipLibCheck": true /* Skip type checking of declaration files. */,
+        "forceConsistentCasingInFileNames": true /* Disallow inconsistently-cased references to the same file. */,
+        //"experimentalDecorators": true, // Enabled for TSOA
+        //"emitDecoratorMetadata": true, // Enabled for TSOA
+        "sourceMap": true,
+    },
+    "include": ["src/**/*"],
+}
