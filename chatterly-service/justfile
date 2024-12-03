@@ -1,0 +1,26 @@
+
+# AWS
+profile := "javobal"
+region := "us-east-1"
+
+# ECR
+repository-host := "655757912437.dkr.ecr.us-east-1.amazonaws.com"
+repository-name := "chatterly/service"
+image-version := "1"
+repository-url := repository-host / repository-name + ":" + image-version
+
+# Retrieve an authentication token and authenticate your Docker client to your registry
+auth-docker:
+    aws ecr get-login-password --region {{region}} --profile {{profile}} \
+    | docker login --username AWS --password-stdin {{repository-host}}
+
+build-docker:
+    docker build -t {{repository-name}}:{{image-version}} .
+
+tag-image:
+    docker tag {{repository-name}}:{{image-version}} {{repository-url}}
+
+upload-image:
+    docker push {{repository-url}}
+
+upload-ecr: build-docker tag-image upload-image
