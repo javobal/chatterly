@@ -13,13 +13,16 @@ resource "aws_ecs_cluster_capacity_providers" "chatterly" {
 
 resource "aws_ecs_task_definition" "chatterly" {
   family = "chatterly"
-  execution_role_arn = "arn:aws:iam::655757912437:role/ecsTaskExecutionRole"
+  execution_role_arn = "arn:aws:iam::655757912437:role/ecsTaskExecutionRole" # TODO : create this role with tf
   network_mode = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu = 256
   memory = 512
 
-  runtime_platform {
+  # https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html
+  
+
+  runtime_platform { 
       cpu_architecture = "X86_64"
       operating_system_family = "LINUX"
   }
@@ -73,6 +76,11 @@ resource "aws_ecs_service" "chatterly" {
   platform_version = "LATEST"
 
   scheduling_strategy = "REPLICA"
+
+  deployment_circuit_breaker {
+    enable = true
+    rollback = true
+  }
 
   network_configuration {
     subnets = data.aws_subnets.chatterly-private.ids
